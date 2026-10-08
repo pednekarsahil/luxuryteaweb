@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THÉORA | Haute Botanique Artisanal Tea</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Luxury Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            theora: {
+              obsidian: '#050c08',
+              emerald: '#08140e',
+              deepGreen: '#0e1f16',
+              forest: '#142a1f',
+              gold: '#cba358',
+              goldLight: '#ecd69d',
+              goldMuted: '#957c45',
+              cream: '#f8f5ee',
+              muted: '#9ba99f',
+              border: 'rgba(203, 163, 88, 0.22)'
+            }
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+            cinzel: ['Cinzel', 'serif'],
+            sans: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #050c08; }
+    ::-webkit-scrollbar-thumb { background: #1c3627; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #cba358; }
+
+    /* Ambient Lighting Overlays */
+    .botanical-glow {
+      background: radial-gradient(circle at 75% 25%, rgba(18, 48, 32, 0.5) 0%, transparent 60%),
+                  radial-gradient(circle at 20% 70%, rgba(203, 163, 88, 0.08) 0%, transparent 55%),
+                  radial-gradient(circle at 50% 50%, rgba(8, 20, 14, 0.95) 0%, #050c08 100%);
+    }
+
+    /* Gold Gradient Text */
+    .text-gold-gradient {
+      background: linear-gradient(135deg, #fceecb 0%, #cba358 50%, #957c45 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .border-gold-gradient {
+      border-image: linear-gradient(to right, rgba(203,163,88,0.4), rgba(203,163,88,0.1)) 1;
+    }
+
+    /* Floating leaves in 3D space */
+    @keyframes swayAndFall {
+      0% { transform: translate3d(0, -60px, 0) rotate(0deg) rotateX(0deg); opacity: 0; }
+      10% { opacity: 0.75; }
+      50% { transform: translate3d(60px, 50vh, 40px) rotate(180deg) rotateX(45deg); }
+      90% { opacity: 0.75; }
+      100% { transform: translate3d(-30px, 105vh, 80px) rotate(360deg) rotateX(90deg); opacity: 0; }
+    }
+
+    .drifting-leaf {
+      position: absolute;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5));
+      animation: swayAndFall linear infinite;
+    }
+
+    /* Luxury Button Sheen Effect */
+    .btn-luxury {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-luxury::after {
+      content: '';
+      position: absolute;
+      top: -50%; left: -60%;
+      width: 40%; height: 200%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+      transform: rotate(30deg);
+      transition: all 0.75s ease;
+    }
+    .btn-luxury:hover::after { left: 130%; }
+
+    /* 3D Carousel Stage */
+    .carousel-stage { perspective: 1200px; perspective-origin: center center; }
+    .carousel-card {
+      transition: transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                  opacity 0.65s ease, 
+                  box-shadow 0.65s ease,
+                  border-color 0.65s ease;
+      will-change: transform, opacity;
+      transform-style: preserve-3d;
+    }
+
+    /* Steam Canvas styling */
+    .steam-canvas { position: absolute; pointer-events: none; z-index: 20; }
+
+    /* Shimmer Gold Line */
+    .gold-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(203, 163, 88, 0.4), transparent);
+    }
+
+    /* ===== FIX: Ensure Lucide SVG icons render with proper color & size ===== */
+    svg.lucide {
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    /* Force SVG size to match Tailwind utility classes even if Lucide sets width/height attrs */
+    [data-lucide] svg,
+    span svg.lucide,
+    a svg.lucide,
+    button svg.lucide {
+      width: inherit;
+      height: inherit;
+    }
+    /* Give the footer social icons a fallback size in case utility classes are stripped */
+    .footer-social svg.lucide {
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+</head>
+
+<body class="bg-theora-obsidian text-theora-cream font-sans antialiased selection:bg-theora-gold selection:text-theora-obsidian overflow-x-hidden min-h-screen relative">
+
+  <!-- Top Luxury Header -->
+  <header class="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-theora-obsidian/80 border-b border-theora-border/40 transition-all duration-300 px-6 sm:px-12 py-5 flex items-center justify-between">
+    <a href="#hero" class="flex items-center gap-3 group">
+      <div class="w-8 h-8 rounded-full border border-theora-gold/40 flex items-center justify-center text-theora-gold font-serif text-lg group-hover:border-theora-gold transition-colors">
+        𝒯
+      </div>
+      <span class="font-serif tracking-[0.35em] text-2xl font-light text-theora-cream group-hover:text-theora-goldLight transition-colors">
+        THÉORA
+      </span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-9 font-sans text-[11px] uppercase tracking-[0.22em] text-theora-muted">
+      <a href="#hero" class="hover:text-theora-gold transition-colors text-theora-gold">Collection</a>
+      <a href="#origin" class="hover:text-theora-gold transition-colors">Origin</a>
+      <a href="#experience" class="hover:text-theora-gold transition-colors">Experience</a>
+      <a href="#carousel-section" class="hover:text-theora-gold transition-colors">Ritual</a>
+      <a href="#craft" class="hover:text-theora-gold transition-colors">Story</a>
+    </nav>
+
+    <div class="flex items-center gap-4 sm:gap-6">
+      <button id="search-trigger-btn" class="text-theora-cream hover:text-theora-gold transition-colors p-1" aria-label="Search Collections">
+        <i data-lucide="search" class="w-4 h-4"></i>
+      </button>
+
+      <button id="cart-trigger-btn" class="relative text-theora-cream hover:text-theora-gold transition-colors p-1" aria-label="Shopping Cart">
+        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+        <span id="cart-counter-badge" class="absolute -top-1.5 -right-2 bg-theora-gold text-theora-obsidian font-bold text-[9px] w-4 h-4 rounded-full flex items-center justify-center transition-transform scale-100">
+          2
+        </span>
+      </button>
+
+      <button id="mobile-menu-btn" class="md:hidden text-theora-cream hover:text-theora-gold p-1">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Flyout -->
+  <div id="mobile-nav" class="fixed inset-0 z-40 bg-theora-obsidian/95 backdrop-blur-xl flex flex-col justify-center items-center gap-8 -translate-y-full transition-transform duration-500 md:hidden border-b border-theora-border/30">
+    <a href="#hero" class="mobile-nav-link font-serif text-2xl tracking-widest text-theora-cream hover:text-theora-gold">Collection</a>
+    <a href="#origin" class="mobile-nav-link font-serif text-2xl tracking-widest text-theora-cream hover:text-theora-gold">Origin</a>
+    <a href="#experience" class="mobile-nav-link font-serif text-2xl tracking-widest text-theora-cream hover:text-theora-gold">Experience</a>
+    <a href="#carousel-section" class="mobile-nav-link font-serif text-2xl tracking-widest text-theora-cream hover:text-theora-gold">Signature Ritual</a>
+    <a href="#craft" class="mobile-nav-link font-serif text-2xl tracking-widest text-theora-cream hover:text-theora-gold">Craft & Story</a>
+  </div>
+
+  <main class="relative z-20">
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen pt-28 pb-16 px-6 sm:px-12 lg:px-20 flex items-center justify-center relative overflow-hidden">
+      <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        
+        <div class="lg:col-span-5 flex flex-col items-start z-10">
+          <h1 class="font-serif text-5xl sm:text-6xl xl:text-7xl font-light leading-[1.08] tracking-wide mb-6">
+            A RITUAL<br>
+            <span class="italic font-normal">WORTH</span><br>
+            SAVORING.
+          </h1>
+
+          <p class="text-theora-muted text-sm sm:text-base font-light leading-relaxed max-w-md mb-8">
+            More than tea — it’s a timeless journey of flavor, nature, and generational harmony. Hand-plucked single-estate leaves, cured with sacred precision.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4">
+            <a href="#carousel-section" class="btn-luxury px-8 py-3.5 border border-theora-gold text-theora-cream bg-theora-deepGreen/50 text-[11px] uppercase tracking-[0.25em] flex items-center gap-3 group hover:border-theora-goldLight hover:shadow-[0_0_25px_rgba(203,163,88,0.3)]">
+              <span>Explore Collection</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-theora-gold transition-transform group-hover:translate-x-1.5"></i>
+            </a>
+
+            <button onclick="scrollToBrewRitual()" class="px-6 py-3.5 text-[11px] uppercase tracking-[0.2em] text-theora-muted hover:text-theora-gold transition-colors flex items-center gap-2">
+              <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+              <span>Brewing Ritual</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-6 pt-10 mt-10 border-t border-theora-border/25 w-full max-w-md">
+            <div>
+              <p class="font-serif text-xl sm:text-2xl text-theora-gold">2,100<span class="text-xs font-sans">m</span></p>
+              <p class="text-[10px] uppercase tracking-wider text-theora-muted">Altitude Origin</p>
+            </div>
+            <div>
+              <p class="font-serif text-xl sm:text-2xl text-theora-gold">100<span class="text-xs font-sans">%</span></p>
+              <p class="text-[10px] uppercase tracking-wider text-theora-muted">Biodynamic</p>
+            </div>
+            <div>
+              <p class="font-serif text-xl sm:text-2xl text-theora-gold">14<span class="text-xs font-sans">Days</span></p>
+              <p class="text-[10px] uppercase tracking-wider text-theora-muted">Bamboo Shade</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 relative flex items-center justify-center">
+          <div class="relative w-full max-w-xl aspect-[4/3] sm:aspect-square flex items-center justify-center">
+            <div class="absolute inset-0 rounded-full bg-emerald-950/40 blur-3xl -z-10 scale-90"></div>
+            
+            <div class="relative w-full h-full rounded-2xl overflow-hidden border border-theora-border/30 bg-theora-deepGreen/30 backdrop-blur-sm shadow-[0_30px_70px_rgba(0,0,0,0.8)] group">
+              <img 
+                src="https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1200&q=85" 
+                alt="THÉORA Imperial Tea Canister & Fine Cup" 
+                class="w-full h-full object-cover object-center filter brightness-[0.88] contrast-[1.08] group-hover:scale-105 transition-transform duration-1000"
+              />
+
+              <div class="absolute inset-0 bg-gradient-to-t from-theora-obsidian via-transparent to-black/30 pointer-events-none"></div>
+
+             
+
+              <div class="absolute bottom-6 right-6 backdrop-blur-md bg-theora-obsidian/80 border border-theora-border/40 p-4 rounded-lg max-w-[210px] hidden sm:block">
+                <p class="font-serif italic text-sm text-theora-cream mb-1">“Rare Italian Bergamot paired with high-altitude Himalayan tips.”</p>
+                <div class="flex items-center justify-between text-[9px] uppercase tracking-widest text-theora-gold">
+                  <span>95°C Water</span>
+                  <span>3.5 Min Steep</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Origin Section -->
+    <section id="origin" class="py-28 px-6 sm:px-12 lg:px-20 relative border-t border-theora-border/20">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        
+        <div class="lg:col-span-6 relative order-2 lg:order-1">
+          <div class="relative rounded-2xl overflow-hidden border border-theora-border/30 aspect-[4/3] shadow-2xl group">
+            <img 
+              src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1200&q=85" 
+              alt="Fresh Camellia Sinensis Tea Leaves" 
+              class="w-full h-full object-cover filter brightness-90 group-hover:scale-105 transition-transform duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-tr from-theora-obsidian/80 via-transparent to-transparent"></div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 flex flex-col items-start order-1 lg:order-2">
+          <span class="text-xs uppercase font-sans tracking-[0.3em] text-theora-gold mb-3">Tea Experience</span>
+          <h2 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-light tracking-wide mb-6">
+            ORIGIN
+          </h2>
+          <p class="text-theora-muted text-sm sm:text-base font-light leading-relaxed mb-6">
+            High above the mist line at 2,100 meters, our tea gardens breathe crystal Alpine air and morning cloud dew. The extreme diurnal temperature shifts concentrate essential polyphenols, yielding notes of wild orchid, roasted pine, and liquid gold honey.
+          </p>
+          <p class="text-theora-muted text-sm sm:text-base font-light leading-relaxed mb-8">
+            Every harvest adheres strictly to the biodynamic calendar, plucked exclusively during the dawn dew window to preserve the cellular integrity of the leaves.
+          </p>
+
+          <button onclick="openTerroirModal()" class="btn-luxury px-8 py-3.5 border border-theora-gold text-theora-cream text-[11px] uppercase tracking-[0.25em] flex items-center gap-3">
+            <span>Discover Terroir</span>
+            <i data-lucide="compass" class="w-3.5 h-3.5 text-theora-gold"></i>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Tea Experience Section -->
+    <section id="experience" class="py-28 px-6 sm:px-12 lg:px-20 relative bg-theora-emerald/40 border-t border-theora-border/20">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        
+        <div class="lg:col-span-6">
+          <span class="text-xs uppercase font-sans tracking-[0.3em] text-theora-gold mb-3 block">Product Collection</span>
+          <h2 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-light tracking-wide mb-6 leading-tight">
+            TEA<br><span class="italic font-normal">EXPERIENCE</span>
+          </h2>
+          <p class="text-theora-muted text-sm sm:text-base font-light leading-relaxed mb-8">
+            The ritual of infusion is an invitation to slow time. The resonance of hot mountain spring water meeting roasted leaf awakens centuries of contemplation.
+          </p>
+
+          <div class="bg-theora-obsidian/70 border border-theora-border/40 rounded-xl p-6 backdrop-blur-md">
+            <div class="flex items-center justify-between pb-4 border-b border-theora-border/20 mb-4">
+              <span class="font-serif text-lg text-theora-goldLight">Infusion Sanctuary</span>
+              <span class="text-[10px] uppercase tracking-widest text-theora-muted">Ritual Helper</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 mb-5">
+              <button onclick="selectBrewTea('earl')" id="brew-btn-earl" class="brew-select-btn px-2.5 py-2 text-[10px] uppercase tracking-wider rounded border border-theora-gold text-theora-gold bg-theora-deepGreen/60 text-center transition-all">
+                Earl Grey
+              </button>
+              <button onclick="selectBrewTea('oolong')" id="brew-btn-oolong" class="brew-select-btn px-2.5 py-2 text-[10px] uppercase tracking-wider rounded border border-theora-border/30 text-theora-muted hover:border-theora-gold text-center transition-all">
+                Amber Oolong
+              </button>
+              <button onclick="selectBrewTea('gyokuro')" id="brew-btn-gyokuro" class="brew-select-btn px-2.5 py-2 text-[10px] uppercase tracking-wider rounded border border-theora-border/30 text-theora-muted hover:border-theora-gold text-center transition-all">
+                Gyokuro
+              </button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 text-center py-2 mb-4 bg-theora-deepGreen/30 rounded-lg">
+              <div>
+                <p class="text-[9px] uppercase tracking-widest text-theora-muted">Temp</p>
+                <p id="brew-temp-val" class="font-serif text-xl text-theora-gold">95°C</p>
+              </div>
+              <div>
+                <p class="text-[9px] uppercase tracking-widest text-theora-muted">Leaf Weight</p>
+                <p id="brew-weight-val" class="font-serif text-xl text-theora-gold">3.5g</p>
+              </div>
+              <div>
+                <p class="text-[9px] uppercase tracking-widest text-theora-muted">Water</p>
+                <p id="brew-water-val" class="font-serif text-xl text-theora-gold">220ml</p>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-2">
+              <div class="flex items-center gap-3">
+                <i data-lucide="timer" class="w-4 h-4 text-theora-gold"></i>
+                <span id="steep-timer-display" class="font-serif text-2xl tracking-widest text-theora-cream">03:30</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="timer-toggle-btn" onclick="toggleSteepTimer()" class="px-4 py-1.5 rounded border border-theora-gold text-[10px] uppercase tracking-widest bg-theora-gold/10 hover:bg-theora-gold hover:text-theora-obsidian transition-colors">
+                  Start Steep
+                </button>
+                <button onclick="resetSteepTimer()" class="p-1.5 rounded border border-theora-border/40 text-theora-muted hover:text-theora-cream transition-colors">
+                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 relative">
+          <div class="relative rounded-2xl overflow-hidden border border-theora-border/30 aspect-[4/3] shadow-2xl group">
+            <img 
+              src="https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&w=1200&q=85" 
+              alt="Steaming hot tea pouring from dark teapot" 
+              class="w-full h-full object-cover filter brightness-90 group-hover:scale-105 transition-transform duration-700"
+            />
+            
+           
+
+            <div class="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-theora-obsidian/80 border border-theora-border/30 flex justify-between items-center">
+              <div>
+                <p class="font-serif text-lg text-theora-cream">The Porcelain Cadence</p>
+                <p class="text-xs text-theora-muted font-light">Thin-lip Jingdezhen fine bone china</p>
+              </div>
+              <span class="text-theora-gold font-serif text-xs italic tracking-wider">Aroma: 98% Floral</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3D Product Carousel Section -->
+    <section id="carousel-section" class="py-28 px-6 sm:px-12 lg:px-20 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto text-center mb-16">
+        <span class="text-xs uppercase font-sans tracking-[0.3em] text-theora-gold mb-3 inline-block">Signature Canister Collection</span>
+        <h2 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-light tracking-wide mb-4">
+          PRODUCT COLLECTION
+        </h2>
+        <p class="text-theora-muted text-sm max-w-lg mx-auto font-light">
+          Each airtight brushed metallic canister protects rare harvest leaves against UV oxidation, securing optimal freshness.
+        </p>
+      </div>
+
+      <div class="carousel-stage max-w-5xl mx-auto relative min-h-[480px] flex items-center justify-center">
+        
+        <div id="carousel-cards-wrapper" class="relative w-full flex items-center justify-center h-full">
+
+          <div data-index="0" class="carousel-card absolute w-[290px] sm:w-[320px] rounded-2xl p-6 bg-theora-deepGreen/80 border border-theora-border/40 backdrop-blur-lg flex flex-col items-center cursor-pointer">
+            <div class="w-full aspect-[3/4] rounded-xl overflow-hidden mb-5 relative shadow-lg">
+              <img src="https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=700&q=85" alt="Amber Oolong" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-theora-obsidian via-transparent to-transparent"></div>
+              <span class="absolute bottom-3 left-3 text-[10px] tracking-widest uppercase bg-theora-obsidian/80 px-2 py-1 rounded text-theora-gold">Roasted High Mountain</span>
+            </div>
+            <h3 class="font-serif text-2xl text-theora-cream mb-1">Amber Oolong</h3>
+            <p class="text-[11px] uppercase tracking-widest text-theora-gold mb-3">Charcoal Baked · Formosa</p>
+            <p class="text-xs text-theora-muted text-center leading-relaxed mb-4">
+              Complex honey nectar undertones with deep bamboo charcoal roast warmth.
+            </p>
+            <div class="flex items-center justify-between w-full pt-3 border-t border-theora-border/20">
+              <span class="font-serif text-xl text-theora-goldLight">$44.00</span>
+              <button onclick="addToCart('Amber Oolong', 44, 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=300&q=80')" class="btn-luxury px-4 py-2 text-[10px] uppercase tracking-widest border border-theora-gold text-theora-cream hover:bg-theora-gold hover:text-theora-obsidian transition-colors">
+                Add To Bag
+              </button>
+            </div>
+          </div>
+
+          <div data-index="1" class="carousel-card active absolute w-[290px] sm:w-[320px] rounded-2xl p-6 bg-theora-deepGreen/80 border border-theora-border/40 backdrop-blur-lg flex flex-col items-center cursor-pointer">
+            <div class="w-full aspect-[3/4] rounded-xl overflow-hidden mb-5 relative shadow-lg">
+              <img src="https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=700&q=85" alt="Earl Grey Imperial" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-theora-obsidian via-transparent to-transparent"></div>
+              <span class="absolute bottom-3 left-3 text-[10px] tracking-widest uppercase bg-theora-obsidian/80 px-2 py-1 rounded text-theora-gold">Calabrian Bergamot</span>
+            </div>
+            <h3 class="font-serif text-2xl text-theora-cream mb-1">Earl Grey Imperial</h3>
+            <p class="text-[11px] uppercase tracking-widest text-theora-gold mb-3">Single-Estate First Flush</p>
+            <p class="text-xs text-theora-muted text-center leading-relaxed mb-4">
+              Cold-pressed winter bergamot peels gently infused over hand-twisted orthodox leaves.
+            </p>
+            <div class="flex items-center justify-between w-full pt-3 border-t border-theora-border/20">
+              <span class="font-serif text-xl text-theora-goldLight">$38.00</span>
+              <button onclick="addToCart('Earl Grey Imperial', 38, 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=300&q=80')" class="btn-luxury px-4 py-2 text-[10px] uppercase tracking-widest border border-theora-gold text-theora-cream hover:bg-theora-gold hover:text-theora-obsidian transition-colors">
+                Add To Bag
+              </button>
+            </div>
+          </div>
+
+          <div data-index="2" class="carousel-card absolute w-[290px] sm:w-[320px] rounded-2xl p-6 bg-theora-deepGreen/80 border border-theora-border/40 backdrop-blur-lg flex flex-col items-center cursor-pointer">
+            <div class="w-full aspect-[3/4] rounded-xl overflow-hidden mb-5 relative shadow-lg">
+              <img src="https://images.unsplash.com/photo-1571934811356-5cc061b6821f?auto=format&fit=crop&w=700&q=85" alt="Emerald Gyokuro" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-theora-obsidian via-transparent to-transparent"></div>
+              <span class="absolute bottom-3 left-3 text-[10px] tracking-widest uppercase bg-theora-obsidian/80 px-2 py-1 rounded text-theora-gold">21-Day Shade Grown</span>
+            </div>
+            <h3 class="font-serif text-2xl text-theora-cream mb-1">Emerald Gyokuro</h3>
+            <p class="text-[11px] uppercase tracking-widest text-theora-gold mb-3">Uji Prefecture · Kyoto</p>
+            <p class="text-xs text-theora-muted text-center leading-relaxed mb-4">
+              Silky, supreme umami sweetness with ocean air freshness and vibrant jade liquor.
+            </p>
+            <div class="flex items-center justify-between w-full pt-3 border-t border-theora-border/20">
+              <span class="font-serif text-xl text-theora-goldLight">$48.00</span>
+              <button onclick="addToCart('Emerald Gyokuro', 48, 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?auto=format&fit=crop&w=300&q=80')" class="btn-luxury px-4 py-2 text-[10px] uppercase tracking-widest border border-theora-gold text-theora-cream hover:bg-theora-gold hover:text-theora-obsidian transition-colors">
+                Add To Bag
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <button id="prev-card-btn" class="absolute left-2 sm:-left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full border border-theora-gold/40 bg-theora-obsidian/80 text-theora-gold flex items-center justify-center hover:border-theora-gold hover:bg-theora-deepGreen transition-all shadow-lg" aria-label="Previous Tea Blend">
+          <i data-lucide="chevron-left" class="w-5 h-5"></i>
+        </button>
+        <button id="next-card-btn" class="absolute right-2 sm:-right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full border border-theora-gold/40 bg-theora-obsidian/80 text-theora-gold flex items-center justify-center hover:border-theora-gold hover:bg-theora-deepGreen transition-all shadow-lg" aria-label="Next Tea Blend">
+          <i data-lucide="chevron-right" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="flex justify-center items-center gap-3 mt-10">
+        <button onclick="setCarouselSlide(0)" class="carousel-dot w-2.5 h-2.5 rounded-full bg-theora-muted/40 transition-all"></button>
+        <button onclick="setCarouselSlide(1)" class="carousel-dot w-8 h-2.5 rounded-full bg-theora-gold transition-all"></button>
+        <button onclick="setCarouselSlide(2)" class="carousel-dot w-2.5 h-2.5 rounded-full bg-theora-muted/40 transition-all"></button>
+      </div>
+    </section>
+
+    <!-- Craft & Story Section -->
+    <section id="craft" class="py-28 px-6 sm:px-12 lg:px-20 relative border-t border-theora-border/20">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        
+        <div class="lg:col-span-5">
+          <span class="text-xs uppercase font-sans tracking-[0.3em] text-theora-gold mb-3 block">True Craft</span>
+          <h2 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-light tracking-wide mb-6">
+            CRAFT &<br><span class="italic font-normal">STORY</span>
+          </h2>
+          <p class="text-theora-muted text-sm sm:text-base font-light leading-relaxed mb-6">
+            The preservation of loose-leaf vitality relies on wood-fired wok withering and slow bamboo tray oxidation. Our fourth-generation tea master reads humidity on the fingertips, catching the fleeting second when flower tannins surrender to honeyed sweetness.
+          </p>
+          <p class="text-theora-muted text-sm sm:text-base font-light leading-relaxed mb-8">
+            Every seasonal batch is signed, numbered, and sealed with melted botanical wax.
+          </p>
+
+          <div class="flex items-center gap-4">
+            <button onclick="openReviewModal()" class="btn-luxury px-8 py-3.5 border border-theora-gold text-theora-cream text-[11px] uppercase tracking-[0.25em] flex items-center gap-3">
+              <span>Leave A Review</span>
+              <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-theora-gold"></i>
+            </button>
+            <div class="flex items-center gap-1 text-theora-gold text-xs">
+              <span>★ 4.96</span>
+              <span class="text-theora-muted text-[10px]">(342 connoisseurs)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 relative">
+          <div class="relative rounded-2xl overflow-hidden border border-theora-border/30 aspect-[16/10] shadow-2xl group">
+            <img 
+              src="https://images.unsplash.com/photo-1563822249548-9a72b6353cd1?auto=format&fit=crop&w=1200&q=85" 
+              alt="Tea master curating fragrant loose tea leaves" 
+              class="w-full h-full object-cover filter brightness-90 group-hover:scale-105 transition-transform duration-700"
+            />
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-theora-obsidian/90 via-transparent to-transparent"></div>
+
+            <div class="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+              <div>
+                <p class="font-serif text-xl text-theora-cream">Master S. Naruse</p>
+                <p class="text-xs text-theora-gold tracking-widest uppercase">Chief Tea Sommelier · Kyoto</p>
+              </div>
+              <div class="w-14 h-14 rounded-full border border-theora-gold/50 flex items-center justify-center text-theora-gold font-serif italic text-xs backdrop-blur-md bg-theora-obsidian/60">
+                1924
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative z-20 border-t border-theora-border/30 bg-[#040805] pt-20 pb-12 px-6 sm:px-12 lg:px-20">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-16 border-b border-theora-border/20 items-center">
+        <div class="lg:col-span-6">
+          <h3 class="font-serif text-3xl text-theora-cream mb-2">The Private Salon Gazette</h3>
+          <p class="text-theora-muted text-sm font-light">Receive invitations to micro-lot seasonal flushes and rare reserve allocations.</p>
+        </div>
+        <div class="lg:col-span-6">
+          <form onsubmit="handleNewsletterSubmit(event)" class="flex flex-col sm:flex-row gap-3">
+            <input 
+              type="email" 
+              required
+              id="newsletter-email" 
+              placeholder="Enter your email address..." 
+              class="bg-theora-deepGreen/60 border border-theora-border/40 px-5 py-3.5 text-xs text-theora-cream placeholder:text-theora-muted/60 focus:outline-none focus:border-theora-gold flex-grow rounded"
+            />
+            <button type="submit" class="btn-luxury px-7 py-3.5 border border-theora-gold bg-theora-gold text-theora-obsidian font-medium text-[11px] uppercase tracking-[0.25em] hover:bg-theora-goldLight transition-colors">
+              Subscribe
+            </button>
+          </form>
+          <span id="newsletter-feedback" class="text-[11px] text-emerald-400 mt-2 block hidden">You have been inscribed into the private salon ledger.</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-10 py-16">
+        <div>
+          <h4 class="font-serif text-lg text-theora-goldLight mb-5">Collections</h4>
+          <ul class="space-y-3 text-xs text-theora-muted font-light">
+            <li><a href="#carousel-section" class="hover:text-theora-cream transition-colors">First Flush Sencha</a></li>
+            <li><a href="#carousel-section" class="hover:text-theora-cream transition-colors">Charcoal Oolong</a></li>
+            <li><a href="#carousel-section" class="hover:text-theora-cream transition-colors">Imperial Bergamot</a></li>
+            <li><a href="#carousel-section" class="hover:text-theora-cream transition-colors">Rare White Peony</a></li>
+            <li><a href="#carousel-section" class="hover:text-theora-cream transition-colors">Ceremonial Matcha</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-serif text-lg text-theora-goldLight mb-5">Terroir & Estates</h4>
+          <ul class="space-y-3 text-xs text-theora-muted font-light">
+            <li><a href="#origin" class="hover:text-theora-cream transition-colors">Kyoto Alpine Reserve</a></li>
+            <li><a href="#origin" class="hover:text-theora-cream transition-colors">Formosa High Peak</a></li>
+            <li><a href="#origin" class="hover:text-theora-cream transition-colors">Darjeeling Valley</a></li>
+            <li><a href="#origin" class="hover:text-theora-cream transition-colors">Biodynamic Soil Report</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-serif text-lg text-theora-goldLight mb-5">Ceremony</h4>
+          <ul class="space-y-3 text-xs text-theora-muted font-light">
+            <li><a href="#experience" class="hover:text-theora-cream transition-colors">Gaiwan Steeping Ritual</a></li>
+            <li><a href="#experience" class="hover:text-theora-cream transition-colors">Porcelain Vessels</a></li>
+            <li><a href="#experience" class="hover:text-theora-cream transition-colors">Water Minerality Guide</a></li>
+            <li><a href="#experience" class="hover:text-theora-cream transition-colors">Bespoke Gift Cabinets</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4 - FIXED SOCIAL ICONS -->
+        <div>
+          <h4 class="font-serif text-lg text-theora-goldLight mb-5">House of THÉORA</h4>
+          <p class="text-xs text-theora-muted font-light leading-relaxed mb-4">
+            Curated in Kyoto and Paris. Pure estate single-origin harvests honoring traditional hand craftsmanship.
+          </p>
+          
+        </div>
+      </div>
+
+      <div class="pt-8 border-t border-theora-border/15 flex flex-col sm:flex-row items-center justify-between text-[11px] text-theora-muted/60 font-light gap-4">
+        <p>&copy; 2026 THÉORA Haute Botanique. All Rights Reserved.</p>
+        <p class="tracking-widest uppercase text-[10px]">Designed & Engineered for Pure Contemplation</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Slide-out Shopping Cart Drawer -->
+  <div id="cart-drawer-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="cart-drawer" class="fixed right-0 top-0 bottom-0 w-full max-w-md bg-theora-obsidian border-l border-theora-border/40 p-6 sm:p-8 flex flex-col justify-between translate-x-full transition-transform duration-400 ease-out">
+      
+      <div>
+        <div class="flex items-center justify-between pb-6 border-b border-theora-border/25">
+          <div class="flex items-center gap-3">
+            <i data-lucide="shopping-bag" class="w-5 h-5 text-theora-gold"></i>
+            <h3 class="font-serif text-2xl text-theora-cream">Your Tea Cabinet</h3>
+          </div>
+          <button id="cart-close-btn" class="text-theora-muted hover:text-theora-cream p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="py-4 border-b border-theora-border/15">
+          <div class="flex justify-between text-[10px] uppercase tracking-wider mb-1.5">
+            <span class="text-theora-muted">Complimentary Silk Wrap Gift Box</span>
+            <span class="text-theora-gold">Qualified</span>
+          </div>
+          <div class="w-full bg-theora-deepGreen h-1 rounded-full overflow-hidden">
+            <div class="bg-theora-gold h-full w-full"></div>
+          </div>
+        </div>
+
+        <div id="cart-items-list" class="space-y-4 my-6 max-h-[46vh] overflow-y-auto pr-1"></div>
+      </div>
+
+      <div class="pt-6 border-t border-theora-border/25 space-y-4">
+        <div class="flex justify-between items-center text-sm">
+          <span class="text-theora-muted uppercase tracking-wider text-xs">Subtotal</span>
+          <span id="cart-subtotal" class="font-serif text-2xl text-theora-goldLight">$82.00</span>
+        </div>
+        <p class="text-[10px] text-theora-muted/80">Complimentary temperature-controlled express courier on luxury allocations.</p>
+        <button onclick="handleCheckoutModal()" class="w-full btn-luxury py-4 border border-theora-gold bg-theora-gold text-theora-obsidian font-semibold text-xs uppercase tracking-[0.25em] hover:bg-theora-goldLight transition-colors">
+          Proceed To Checkout
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Search Modal -->
+  <div id="search-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-start justify-center pt-24 px-4">
+    <div class="w-full max-w-2xl bg-theora-obsidian border border-theora-border/50 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+      <button id="search-close-btn" class="absolute top-6 right-6 text-theora-muted hover:text-theora-cream">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="flex items-center gap-3 border-b border-theora-border/30 pb-4 mb-6">
+        <i data-lucide="search" class="w-5 h-5 text-theora-gold"></i>
+        <input 
+          type="text" 
+          id="search-input"
+          oninput="filterSearchLive(this.value)"
+          placeholder="Search by blend, aroma note, or terroir..." 
+          class="w-full bg-transparent text-theora-cream text-lg placeholder:text-theora-muted/40 focus:outline-none font-serif"
+        />
+      </div>
+      <div id="search-results-list" class="space-y-3">
+        <div class="p-3 rounded bg-theora-deepGreen/40 flex justify-between items-center cursor-pointer hover:border-theora-gold border border-transparent" onclick="quickSelectSearch('Earl Grey Imperial')">
+          <div>
+            <p class="font-serif text-base text-theora-cream">Earl Grey Imperial</p>
+            <p class="text-xs text-theora-muted">Cold-Pressed Bergamot · Blue Cornflower</p>
+          </div>
+          <span class="text-theora-gold font-serif text-sm">$38.00</span>
+        </div>
+        <div class="p-3 rounded bg-theora-deepGreen/40 flex justify-between items-center cursor-pointer hover:border-theora-gold border border-transparent" onclick="quickSelectSearch('Amber Oolong')">
+          <div>
+            <p class="font-serif text-base text-theora-cream">Amber Oolong</p>
+            <p class="text-xs text-theora-muted">Charcoal Roasted · Formosa Altitude</p>
+          </div>
+          <span class="text-theora-gold font-serif text-sm">$44.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Modal -->
+  <div id="review-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-theora-obsidian border border-theora-border/50 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeReviewModal()" class="absolute top-6 right-6 text-theora-muted hover:text-theora-cream">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <span class="text-[10px] uppercase tracking-widest text-theora-gold block mb-1">Sommelier Salon</span>
+      <h3 class="font-serif text-3xl text-theora-cream mb-4">Inscribe Your Tasting Notes</h3>
+      <form onsubmit="submitReview(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-theora-muted mb-2">Select Harvest</label>
+          <select id="review-blend" class="w-full bg-theora-deepGreen/50 border border-theora-border/30 rounded px-4 py-2.5 text-xs text-theora-cream focus:border-theora-gold outline-none">
+            <option>Earl Grey Imperial</option>
+            <option>Amber Oolong</option>
+            <option>Emerald Gyokuro</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-theora-muted mb-2">Rating</label>
+          <div class="flex gap-2 text-theora-gold cursor-pointer text-xl" id="review-stars-container">
+            <span onclick="setReviewRating(1)">★</span>
+            <span onclick="setReviewRating(2)">★</span>
+            <span onclick="setReviewRating(3)">★</span>
+            <span onclick="setReviewRating(4)">★</span>
+            <span onclick="setReviewRating(5)">★</span>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-theora-muted mb-2">Tasting Impressions</label>
+          <textarea required id="review-comment" rows="3" placeholder="Describe the aroma, palate texture, and lingering finish..." class="w-full bg-theora-deepGreen/50 border border-theora-border/30 rounded p-3 text-xs text-theora-cream focus:border-theora-gold outline-none"></textarea>
+        </div>
+        <button type="submit" class="w-full btn-luxury py-3 border border-theora-gold bg-theora-gold text-theora-obsidian font-semibold text-xs uppercase tracking-widest">
+          Publish Note
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Terroir Modal -->
+  <div id="terroir-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+    <div class="w-full max-w-xl bg-theora-obsidian border border-theora-border/50 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeTerroirModal()" class="absolute top-6 right-6 text-theora-muted hover:text-theora-cream">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <span class="text-[10px] uppercase tracking-widest text-theora-gold block mb-1">Single-Estate Dossier</span>
+      <h3 class="font-serif text-3xl text-theora-cream mb-4">Mountain Terroir & Microclimate</h3>
+      <div class="space-y-4 text-xs text-theora-muted font-light leading-relaxed mb-6">
+        <p>Our gardens reside on steep volcanic terraces blanketed by mineral-dense morning cloud inversion. The soil composition features disintegrated granite, volcanic ash, and high levels of natural iron.</p>
+        <div class="grid grid-cols-2 gap-4 pt-3 border-t border-theora-border/20">
+          <div class="p-3 bg-theora-deepGreen/40 rounded">
+            <span class="text-theora-gold font-serif text-lg">6.2 pH</span>
+            <p class="text-[10px] uppercase text-theora-muted">Sub-acidic Organic Soil</p>
+          </div>
+          <div class="p-3 bg-theora-deepGreen/40 rounded">
+            <span class="text-theora-gold font-serif text-lg">1,850 mm</span>
+            <p class="text-[10px] uppercase text-theora-muted">Annual Mountain Rainfall</p>
+          </div>
+        </div>
+      </div>
+      <button onclick="closeTerroirModal()" class="w-full py-2.5 border border-theora-border/40 text-[10px] uppercase tracking-widest text-theora-cream hover:border-theora-gold">
+        Close Dossier
+      </button>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification -->
+  <div id="theora-toast" class="fixed bottom-6 right-6 z-50 bg-theora-deepGreen border border-theora-gold text-theora-cream px-5 py-3 rounded-lg shadow-2xl flex items-center gap-3 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <i data-lucide="check-circle" class="w-4 h-4 text-theora-gold"></i>
+    <span id="toast-message" class="text-xs tracking-wider">Item added to your collection.</span>
+  </div>
+
+  <script>
+    /* =====================================================================
+       1. ROBUST LUCIDE INITIALIZATION (FIX FOR MISSING ICONS)
+       Retries until lucide CDN is fully loaded, runs on DOMContentLoaded
+       and window.load, and re-runs whenever new <i data-lucide> nodes appear.
+       ===================================================================== */
+    function initLucide(retries = 30) {
+      if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+        try {
+          lucide.createIcons();
+          console.log('[THÉORA] Lucide icons rendered successfully.');
+        } catch (err) {
+          console.warn('[THÉORA] Lucide createIcons error:', err);
+        }
+      } else if (retries > 0) {
+        setTimeout(() => initLucide(retries - 1), 100);
+      } else {
+        console.error('[THÉORA] Lucide library failed to load from CDN.');
+      }
+    }
+
+    // Safety: a failsafe that replaces unrendered <i data-lucide> with fallback SVGs
+    // in case the CDN is blocked entirely.
+    function failsafeIcons() {
+      document.querySelectorAll('i[data-lucide]').forEach(el => {
+        // If it still has no svg child after init, replace with a text glyph
+        if (!el.querySelector('svg') && el.innerHTML.trim() === '') {
+          const name = el.getAttribute('data-lucide');
+          const glyphs = {
+            'instagram': '📷',
+            'globe': '🌐',
+            'search': '🔍',
+            'shopping-bag': '🛍',
+            'menu': '☰',
+            'x': '✕',
+            'arrow-right': '→',
+            'clock': '⏱',
+            'compass': '🧭',
+            'timer': '⏱',
+            'rotate-ccw': '↺',
+            'pen-tool': '✎',
+            'check-circle': '✓',
+            'chevron-left': '‹',
+            'chevron-right': '›'
+          };
+          if (glyphs[name]) {
+            el.textContent = glyphs[name];
+            el.style.fontSize = '14px';
+            el.style.lineHeight = '1';
+            el.style.display = 'inline-flex';
+            el.style.alignItems = 'center';
+            el.style.justifyContent = 'center';
+          }
+        }
+      });
+    }
+
+    /* =====================================================================
+       2. REALISTIC STEAM EMISSION CANVAS
+       ===================================================================== */
+    function createSteamEmitter(canvasId, spawnXRatio = 0.52, spawnYRatio = 0.58) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+
+      function resize() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      class SteamParticle {
+        constructor() { this.reset(); }
+        reset() {
+          this.x = canvas.width * spawnXRatio + (Math.random() - 0.5) * 45;
+          this.y = canvas.height * spawnYRatio + (Math.random() - 0.5) * 15;
+          this.vx = (Math.random() - 0.5) * 0.45;
+          this.vy = -(0.7 + Math.random() * 0.9);
+          this.radius = 8 + Math.random() * 12;
+          this.maxRadius = 35 + Math.random() * 30;
+          this.alpha = 0;
+          this.maxAlpha = 0.16 + Math.random() * 0.12;
+          this.life = 0;
+          this.maxLife = 90 + Math.random() * 80;
+          this.wobble = Math.random() * Math.PI * 2;
+        }
+        update() {
+          this.life++;
+          this.wobble += 0.03;
+          this.x += this.vx + Math.sin(this.wobble) * 0.4;
+          this.y += this.vy;
+          this.radius += (this.maxRadius - this.radius) * 0.015;
+          if (this.life < this.maxLife * 0.3) {
+            this.alpha = (this.life / (this.maxLife * 0.3)) * this.maxAlpha;
+          } else {
+            this.alpha = (1 - (this.life / this.maxLife)) * this.maxAlpha;
+          }
+          if (this.life >= this.maxLife) this.reset();
+        }
+        draw() {
+          if (this.alpha <= 0) return;
+          ctx.save();
+          const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+          gradient.addColorStop(0, `rgba(245, 240, 230, ${this.alpha})`);
+          gradient.addColorStop(0.6, `rgba(220, 230, 220, ${this.alpha * 0.6})`);
+          gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      for (let i = 0; i < 40; i++) {
+        const p = new SteamParticle();
+        p.life = Math.random() * p.maxLife;
+        particles.push(p);
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of particles) { p.update(); p.draw(); }
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    /* =====================================================================
+       3. BOTANICAL FLOATING LEAVES SYSTEM
+       ===================================================================== */
+    function initFloatingLeaves() {
+      const container = document.getElementById('leaves-container');
+      if (!container) return;
+      const count = 16;
+
+      for (let i = 0; i < count; i++) {
+        const leaf = document.createElement('div');
+        leaf.className = 'drifting-leaf';
+
+        const sizeW = 20 + Math.random() * 16;
+        const sizeH = 10 + Math.random() * 8;
+        const left = Math.random() * 100;
+        const duration = 14 + Math.random() * 18;
+        const delay = Math.random() * 15;
+        const opacity = 0.3 + Math.random() * 0.45;
+
+        leaf.style.width = `${sizeW}px`;
+        leaf.style.height = `${sizeH}px`;
+        leaf.style.left = `${left}%`;
+        leaf.style.animationDuration = `${duration}s`;
+        leaf.style.animationDelay = `-${delay}s`;
+        leaf.style.opacity = opacity;
+
+        leaf.innerHTML = `
+          <svg viewBox="0 0 40 20" class="w-full h-full fill-emerald-800/80 stroke-emerald-600/30">
+            <path d="M2,10 C10,2 30,2 38,10 C30,18 10,18 2,10 Z" />
+            <path d="M2,10 Q20,10 38,10" stroke="rgba(203,163,88,0.4)" stroke-width="0.75" fill="none" />
+          </svg>
+        `;
+
+        container.appendChild(leaf);
+      }
+    }
+
+    /* =====================================================================
+       4. 3D PRODUCT CAROUSEL
+       ===================================================================== */
+    let currentSlide = 1;
+    const cards = document.querySelectorAll('.carousel-card');
+    const dots = document.querySelectorAll('.carousel-dot');
+
+    function updateCarouselPositions() {
+      cards.forEach((card) => {
+        const index = parseInt(card.getAttribute('data-index'), 10);
+        let offset = index - currentSlide;
+
+        if (offset === 0) {
+          card.style.transform = `translate3d(0, -10px, 120px) scale(1.06) rotateY(0deg)`;
+          card.style.zIndex = '30';
+          card.style.opacity = '1';
+          card.classList.add('border-theora-gold', 'shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(203,163,88,0.2)]');
+          card.classList.remove('border-theora-border/40');
+        } else if (offset === -1 || offset === 2) {
+          card.style.transform = `translate3d(-240px, 15px, -60px) scale(0.9) rotateY(18deg)`;
+          card.style.zIndex = '20';
+          card.style.opacity = '0.65';
+          card.classList.remove('border-theora-gold', 'shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(203,163,88,0.2)]');
+          card.classList.add('border-theora-border/40');
+        } else if (offset === 1 || offset === -2) {
+          card.style.transform = `translate3d(240px, 15px, -60px) scale(0.9) rotateY(-18deg)`;
+          card.style.zIndex = '20';
+          card.style.opacity = '0.65';
+          card.classList.remove('border-theora-gold', 'shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(203,163,88,0.2)]');
+          card.classList.add('border-theora-border/40');
+        }
+      });
+
+      dots.forEach((dot, idx) => {
+        if (idx === currentSlide) {
+          dot.classList.add('w-8', 'bg-theora-gold');
+          dot.classList.remove('w-2.5', 'bg-theora-muted/40');
+        } else {
+          dot.classList.remove('w-8', 'bg-theora-gold');
+          dot.classList.add('w-2.5', 'bg-theora-muted/40');
+        }
+      });
+    }
+
+    function setCarouselSlide(index) {
+      currentSlide = (index + 3) % 3;
+      updateCarouselPositions();
+      playChimeEffect(440 + currentSlide * 60);
+    }
+
+    document.getElementById('prev-card-btn').addEventListener('click', () => setCarouselSlide(currentSlide - 1));
+    document.getElementById('next-card-btn').addEventListener('click', () => setCarouselSlide(currentSlide + 1));
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.getAttribute('data-index'), 10);
+        setCarouselSlide(idx);
+      });
+    });
+
+    /* =====================================================================
+       5. INTERACTIVE STEEP TIMER & RITUAL CALCULATOR
+       ===================================================================== */
+    const brewProfiles = {
+      earl: { temp: '95°C', weight: '3.5g', water: '220ml', seconds: 210 },
+      oolong: { temp: '90°C', weight: '5.0g', water: '200ml', seconds: 240 },
+      gyokuro: { temp: '68°C', weight: '6.0g', water: '150ml', seconds: 120 }
+    };
+
+    let selectedBrew = 'earl';
+    let steepRemaining = 210;
+    let steepInterval = null;
+    let isTimerRunning = false;
+
+    function selectBrewTea(type) {
+      selectedBrew = type;
+      const data = brewProfiles[type];
+      document.getElementById('brew-temp-val').textContent = data.temp;
+      document.getElementById('brew-weight-val').textContent = data.weight;
+      document.getElementById('brew-water-val').textContent = data.water;
+      
+      resetSteepTimer();
+
+      document.querySelectorAll('.brew-select-btn').forEach(btn => {
+        btn.classList.remove('border-theora-gold', 'text-theora-gold', 'bg-theora-deepGreen/60');
+        btn.classList.add('border-theora-border/30', 'text-theora-muted');
+      });
+      document.getElementById(`brew-btn-${type}`).classList.add('border-theora-gold', 'text-theora-gold', 'bg-theora-deepGreen/60');
+      document.getElementById(`brew-btn-${type}`).classList.remove('border-theora-border/30', 'text-theora-muted');
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function toggleSteepTimer() {
+      const toggleBtn = document.getElementById('timer-toggle-btn');
+      if (!isTimerRunning) {
+        isTimerRunning = true;
+        toggleBtn.textContent = 'Pause';
+        toggleBtn.classList.add('bg-theora-gold', 'text-theora-obsidian');
+        playChimeEffect(528);
+
+        steepInterval = setInterval(() => {
+          if (steepRemaining > 0) {
+            steepRemaining--;
+            document.getElementById('steep-timer-display').textContent = formatTime(steepRemaining);
+          } else {
+            clearInterval(steepInterval);
+            isTimerRunning = false;
+            toggleBtn.textContent = 'Infusion Ready';
+            playChimeEffect(880);
+            showToast('The infusion ceremony is complete. Savor your porcelain cup.');
+          }
+        }, 1000);
+      } else {
+        clearInterval(steepInterval);
+        isTimerRunning = false;
+        toggleBtn.textContent = 'Resume';
+        toggleBtn.classList.remove('bg-theora-gold', 'text-theora-obsidian');
+      }
+    }
+
+    function resetSteepTimer() {
+      clearInterval(steepInterval);
+      isTimerRunning = false;
+      steepRemaining = brewProfiles[selectedBrew].seconds;
+      document.getElementById('steep-timer-display').textContent = formatTime(steepRemaining);
+      const toggleBtn = document.getElementById('timer-toggle-btn');
+      toggleBtn.textContent = 'Start Steep';
+      toggleBtn.classList.remove('bg-theora-gold', 'text-theora-obsidian');
+    }
+
+    function scrollToBrewRitual() {
+      document.getElementById('experience').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* =====================================================================
+       6. CART DRAWER & CHECKOUT SYSTEM
+       ===================================================================== */
+    let cart = [
+      { id: 1, name: 'Earl Grey Imperial', price: 38, qty: 1, img: 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=300&q=80' },
+      { id: 2, name: 'Amber Oolong', price: 44, qty: 1, img: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=300&q=80' }
+    ];
+
+    function renderCart() {
+      const container = document.getElementById('cart-items-list');
+      const badge = document.getElementById('cart-counter-badge');
+      const subtotalEl = document.getElementById('cart-subtotal');
+
+      container.innerHTML = '';
+      let total = 0;
+      let count = 0;
+
+      if (cart.length === 0) {
+        container.innerHTML = `<p class="text-theora-muted text-center py-10 font-serif text-lg">Your tea cabinet is currently empty.</p>`;
+      } else {
+        cart.forEach((item, idx) => {
+          total += item.price * item.qty;
+          count += item.qty;
+
+          const itemRow = document.createElement('div');
+          itemRow.className = 'flex items-center gap-4 bg-theora-deepGreen/30 p-3 rounded-lg border border-theora-border/20';
+          itemRow.innerHTML = `
+            <img src="${item.img}" class="w-14 h-14 rounded object-cover border border-theora-border/30" alt="${item.name}">
+            <div class="flex-grow">
+              <h4 class="font-serif text-base text-theora-cream">${item.name}</h4>
+              <p class="text-xs text-theora-gold">$${item.price}.00</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="modifyCartQty(${idx}, -1)" class="w-6 h-6 rounded border border-theora-border/30 text-theora-cream flex items-center justify-center hover:border-theora-gold">-</button>
+              <span class="text-xs font-serif text-theora-cream px-1">${item.qty}</span>
+              <button onclick="modifyCartQty(${idx}, 1)" class="w-6 h-6 rounded border border-theora-border/30 text-theora-cream flex items-center justify-center hover:border-theora-gold">+</button>
+            </div>
+          `;
+          container.appendChild(itemRow);
+        });
+      }
+
+      badge.textContent = count;
+      subtotalEl.textContent = `$${total.toFixed(2)}`;
+    }
+
+    function modifyCartQty(index, change) {
+      if (cart[index]) {
+        cart[index].qty += change;
+        if (cart[index].qty <= 0) cart.splice(index, 1);
+        renderCart();
+      }
+    }
+
+    function addToCart(name, price, img) {
+      const existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id: Date.now(), name, price, qty: 1, img });
+      }
+      renderCart();
+      openCartDrawer();
+      playChimeEffect(660);
+      showToast(`${name} added to your selection.`);
+    }
+
+    function openCartDrawer() {
+      const overlay = document.getElementById('cart-drawer-overlay');
+      const drawer = document.getElementById('cart-drawer');
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      drawer.classList.remove('translate-x-full');
+    }
+
+    function closeCartDrawer() {
+      const overlay = document.getElementById('cart-drawer-overlay');
+      const drawer = document.getElementById('cart-drawer');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      drawer.classList.add('translate-x-full');
+    }
+
+    document.getElementById('cart-trigger-btn').addEventListener('click', openCartDrawer);
+    document.getElementById('cart-close-btn').addEventListener('click', closeCartDrawer);
+    document.getElementById('cart-drawer-overlay').addEventListener('click', (e) => {
+      if (e.target.id === 'cart-drawer-overlay') closeCartDrawer();
+    });
+
+    function handleCheckoutModal() {
+      closeCartDrawer();
+      showToast('Redirecting to encrypted luxury checkout enclave...');
+      playChimeEffect(700);
+    }
+
+    /* =====================================================================
+       7. SEARCH MODAL FILTERING
+       ===================================================================== */
+    const searchModal = document.getElementById('search-modal');
+    document.getElementById('search-trigger-btn').addEventListener('click', () => {
+      searchModal.classList.remove('opacity-0', 'pointer-events-none');
+      document.getElementById('search-input').focus();
+    });
+    document.getElementById('search-close-btn').addEventListener('click', () => {
+      searchModal.classList.add('opacity-0', 'pointer-events-none');
+    });
+
+    function filterSearchLive(query) {
+      const resultsContainer = document.getElementById('search-results-list');
+      const q = query.toLowerCase().trim();
+      const allBlends = [
+        { name: 'Earl Grey Imperial', desc: 'Cold-Pressed Bergamot · Blue Cornflower', price: '$38.00' },
+        { name: 'Amber Oolong', desc: 'Charcoal Roasted · Formosa Altitude', price: '$44.00' },
+        { name: 'Emerald Gyokuro', desc: '21-Day Shade Grown · Kyoto Umami', price: '$48.00' },
+        { name: 'White Peony Reserve', desc: 'Spring Sun-Dried · Fujian Terroir', price: '$52.00' }
+      ];
+
+      const filtered = allBlends.filter(b => b.name.toLowerCase().includes(q) || b.desc.toLowerCase().includes(q));
+      resultsContainer.innerHTML = '';
+
+      if (filtered.length === 0) {
+        resultsContainer.innerHTML = `<p class="text-xs text-theora-muted py-4">No rare harvests match your inquiry.</p>`;
+      } else {
+        filtered.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'p-3 rounded bg-theora-deepGreen/40 flex justify-between items-center cursor-pointer hover:border-theora-gold border border-transparent';
+          div.onclick = () => quickSelectSearch(item.name);
+          div.innerHTML = `
+            <div>
+              <p class="font-serif text-base text-theora-cream">${item.name}</p>
+              <p class="text-xs text-theora-muted">${item.desc}</p>
+            </div>
+            <span class="text-theora-gold font-serif text-sm">${item.price}</span>
+          `;
+          resultsContainer.appendChild(div);
+        });
+      }
+    }
+
+    function quickSelectSearch(teaName) {
+      searchModal.classList.add('opacity-0', 'pointer-events-none');
+      document.getElementById('carousel-section').scrollIntoView({ behavior: 'smooth' });
+      showToast(`Selected ${teaName} from the archives.`);
+    }
+
+    /* =====================================================================
+       8. REVIEW MODAL & STAR RATING
+       ===================================================================== */
+    let currentRating = 5;
+    function openReviewModal() {
+      document.getElementById('review-modal').classList.remove('opacity-0', 'pointer-events-none');
+    }
+    function closeReviewModal() {
+      document.getElementById('review-modal').classList.add('opacity-0', 'pointer-events-none');
+    }
+    function setReviewRating(star) {
+      currentRating = star;
+      const stars = document.getElementById('review-stars-container').children;
+      for (let i = 0; i < 5; i++) {
+        stars[i].style.opacity = i < star ? '1' : '0.25';
+      }
+    }
+    function submitReview(e) {
+      e.preventDefault();
+      closeReviewModal();
+      showToast('Thank you. Your tasting notes have been preserved.');
+      playChimeEffect(580);
+    }
+
+    /* =====================================================================
+       9. TERROIR MODAL
+       ===================================================================== */
+    function openTerroirModal() {
+      document.getElementById('terroir-modal').classList.remove('opacity-0', 'pointer-events-none');
+    }
+    function closeTerroirModal() {
+      document.getElementById('terroir-modal').classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    /* =====================================================================
+       10. NEWSLETTER, TOAST & CHIME
+       ===================================================================== */
+    function handleNewsletterSubmit(e) {
+      e.preventDefault();
+      document.getElementById('newsletter-feedback').classList.remove('hidden');
+      document.getElementById('newsletter-email').value = '';
+      playChimeEffect(620);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('theora-toast');
+      document.getElementById('toast-message').textContent = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 3500);
+    }
+
+    // Web Audio chime for luxury feedback
+    function playChimeEffect(freq) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        if (!window._theoraAudioCtx) window._theoraAudioCtx = new AudioContext();
+        const ctx = window._theoraAudioCtx;
+        if (ctx.state === 'suspended') ctx.resume();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq || 528;
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.65);
+      } catch (err) { /* silent */ }
+    }
+
+    // Mobile Navigation Toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    mobileMenuBtn.addEventListener('click', () => {
+      const isOpen = !mobileNav.classList.contains('-translate-y-full');
+      if (isOpen) {
+        mobileNav.classList.add('-translate-y-full');
+      } else {
+        mobileNav.classList.remove('-translate-y-full');
+      }
+    });
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.add('-translate-y-full');
+      });
+    });
+
+    /* =====================================================================
+       11. BOOTSTRAP — RUN EVERYTHING ON LOAD
+       ===================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      initLucide();
+      setTimeout(failsafeIcons, 2000); // fallback after 2s if CDN failed
+    });
+
+    window.addEventListener('load', () => {
+      initLucide();
+      initFloatingLeaves();
+      createSteamEmitter('hero-steam-canvas', 0.58, 0.52);
+      createSteamEmitter('experience-steam-canvas', 0.48, 0.65);
+      updateCarouselPositions();
+      renderCart();
+      // Run failsafe after everything has had a chance to render
+      setTimeout(failsafeIcons, 1500);
+    });
+
+    // Watch for any dynamically-added icons (e.g., from cart re-renders)
+    const iconObserver = new MutationObserver((mutations) => {
+      let hasNewIcons = false;
+      mutations.forEach(m => {
+        m.addedNodes.forEach(node => {
+          if (node.nodeType === 1) {
+            if (node.matches && node.matches('i[data-lucide]')) hasNewIcons = true;
+            if (node.querySelectorAll && node.querySelectorAll('i[data-lucide]').length) hasNewIcons = true;
+          }
+        });
+      });
+      if (hasNewIcons) initLucide(5);
+    });
+    iconObserver.observe(document.body, { childList: true, subtree: true });
+  </script>
+</body>
+</html>
